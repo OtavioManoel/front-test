@@ -1,11 +1,33 @@
+.wrapper {
+  /* Caso flex */
+  display: flex;
+  flex-wrap: wrap;// quebra a linha quando não cabe mais
+  justify-content: center;  
+
+  /* Caso grid */
+  // display: grid;  
+  // justify-items: center;
+  // align-items: center; 
+}
+
+/* Caso grid */
+// @media (min-width: 1001px){
+//   .wrapper {
+//     grid-template-columns: repeat(4, 1fr);
+//   }
+// }
+
+// @media (max-width: 1000px) {
+//   .wrapper {
+//     grid-template-columns: 1fr; /* 1 coluna */
+//   }
+// }
+
 .item {
   width: 100px;
   height: 100px;
   background-color: red;
   flex-shrink: 0;
-}
-
-.wrapper {
 }
 
 .blue {
