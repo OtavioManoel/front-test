@@ -19,7 +19,22 @@ jobs:
         with:
           submodules: true
           lfs: false
-      - name: Build And Deploy
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14.x' # Confirmando a versão 14.x
+
+      - name: Install Dependencies and Build
+        id: builddeploy
+        run: |
+          export NODE_OPTIONS=--openssl-legacy-provider
+          yarn install
+          yarn run build
+        env:
+          NODE_OPTIONS: '--openssl-legacy-provider'
+
+      - name: Deploy to Azure Static Web Apps
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
         with:
