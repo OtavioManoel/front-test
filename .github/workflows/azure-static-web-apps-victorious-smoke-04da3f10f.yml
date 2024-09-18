@@ -26,7 +26,6 @@ jobs:
           node-version: '14.x' # Confirmando a versão 14.x
 
       - name: Install Dependencies and Build
-        id: builddeploy
         run: |
           export NODE_OPTIONS=--openssl-legacy-provider
           yarn install
@@ -35,7 +34,6 @@ jobs:
           NODE_OPTIONS: '--openssl-legacy-provider'
 
       - name: Deploy to Azure Static Web Apps
-        id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_VICTORIOUS_SMOKE_04DA3F10F }}
@@ -54,7 +52,6 @@ jobs:
     name: Close Pull Request Job
     steps:
       - name: Close Pull Request
-        id: closepullrequest
         uses: Azure/static-web-apps-deploy@v1
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_VICTORIOUS_SMOKE_04DA3F10F }}
