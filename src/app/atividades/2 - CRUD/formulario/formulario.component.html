@@ -29,8 +29,10 @@
 
     <mat-form-field appearance="fill">
         <mat-label>Logradouro</mat-label>
-        <input formControlName="logradouro" matInput placeholder="Logradouro" [attr.disabled]="true">
-        <mat-error *ngIf="form.get('logradouro')?.hasError('required')">Logradouro é obrigatório</mat-error>
+        <input formControlName="logradouro" matInput placeholder="Logradouro" [readonly]="true">
+        <mat-error *ngIf="form.get('logradouro')?.hasError('required')">
+            Logradouro é obrigatório
+        </mat-error>
     </mat-form-field>
 
     <button mat-raised-button type="submit">Salvar</button>

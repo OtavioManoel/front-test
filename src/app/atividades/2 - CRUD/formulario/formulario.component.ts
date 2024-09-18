@@ -38,7 +38,7 @@ export class FormularioComponent implements OnInit {
       email: new FormControl(this.data?.email || '', [Validators.required, Validators.email]),
       senha: new FormControl(this.data?.senha || '', [Validators.required]),
       cep: new FormControl(this.data?.cep || '', [Validators.required, cepValidator()]),
-      logradouro: new FormControl({ value: this.data?.logradouro || '', disabled: true }, [Validators.required]),
+      logradouro: new FormControl(this.data?.logradouro || '', [Validators.required]),
     });
   }
 
