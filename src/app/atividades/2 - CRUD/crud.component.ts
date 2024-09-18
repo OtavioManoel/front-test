@@ -60,7 +60,19 @@ export class CrudComponent implements OnInit, OnDestroy {
   }
 
   editar(pessoa: Pessoa) {
-    this.dialog.open(FormularioComponent)
+    const dialogRef = this.dialog.open(FormularioComponent, {
+      data: pessoa
+    });
+  
+    dialogRef.componentInstance.formularioSubmetido.subscribe((dados: PessoaFormData) => {
+      pessoa.nome = dados.nome;
+      pessoa.email = dados.email;
+      pessoa.senha = dados.senha;
+      pessoa.cep = dados.cep;
+      pessoa.logradouro = dados.logradouro;
+      
+      this.filteredDataSource = [...this.dataSource];
+    });
   }
 
   remover(pessoa: Pessoa) {

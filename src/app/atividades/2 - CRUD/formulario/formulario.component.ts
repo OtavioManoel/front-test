@@ -4,6 +4,8 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { cepValidator } from './cep-validator';
 import { Observable } from 'rxjs';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Inject } from '@angular/core';
 
 interface PessoaFormData {
   nome: string;
@@ -28,18 +30,22 @@ export class FormularioComponent implements OnInit {
 
   constructor(
     private http: HttpClient,
-    private dialogRef: MatDialogRef<FormularioComponent>
+    private dialogRef: MatDialogRef<FormularioComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: PessoaFormData
   ) { 
     this.form = new FormGroup({
-      nome: new FormControl('', [Validators.required, Validators.minLength(3), Validators.maxLength(30)]),
-      email: new FormControl('', [Validators.required, Validators.email]),
-      senha: new FormControl('', [Validators.required]),
-      cep: new FormControl('', [Validators.required, cepValidator()]),
-      logradouro: new FormControl({ value: '', disabled: true }, [Validators.required]),
+      nome: new FormControl(this.data?.nome || '', [Validators.required, Validators.minLength(3), Validators.maxLength(30)]),
+      email: new FormControl(this.data?.email || '', [Validators.required, Validators.email]),
+      senha: new FormControl(this.data?.senha || '', [Validators.required]),
+      cep: new FormControl(this.data?.cep || '', [Validators.required, cepValidator()]),
+      logradouro: new FormControl({ value: this.data?.logradouro || '', disabled: true }, [Validators.required]),
     });
   }
 
   ngOnInit(): void {
+    if (this.data) {
+      this.form.patchValue(this.data);
+    }
   }
 
   buscarCep(cep: string): Observable<CepResponse> {
