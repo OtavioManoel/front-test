@@ -1,15 +1,29 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { cepValidator } from './cep-validator';
+import { Observable } from 'rxjs';
+
+interface PessoaFormData {
+  nome: string;
+  email: string;
+  senha: string;
+  cep: string;
+  logradouro: string;
+}
+
+interface CepResponse {
+  logradouro: string;
+}
 
 @Component({
   selector: 'app-formulario',
   templateUrl: './formulario.component.html',
   styleUrls: ['./formulario.component.scss']
 })
-export class FormularioComponent implements OnInit {  
+export class FormularioComponent implements OnInit {
+  @Output() formularioSubmetido = new EventEmitter<PessoaFormData>()
   form: FormGroup;
 
   constructor(
@@ -28,24 +42,24 @@ export class FormularioComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  buscarCep(cep: string) {
+  buscarCep(cep: string): Observable<CepResponse> {
     const url = `https://viacep.com.br/ws/${cep}/json/`;
-    return this.http.get(url);
+    return this.http.get<CepResponse>(url);
   }
 
   onCepInput() {
     const cep = this.form.get('cep')?.value;
     if (cep && cep.length === 8) {
-      this.buscarCep(cep).subscribe(
-        (data: any) => {
+      this.buscarCep(cep).subscribe({
+        next: (data: CepResponse) => {
           if (data && data.logradouro) {
             this.form.get('logradouro')?.setValue(data.logradouro);
           }
         },
-        (error) => {
+        error: (error) => {
           console.error('Erro ao buscar o CEP', error);
         }
-      );
+      });
     }
   }
 
@@ -54,7 +68,7 @@ export class FormularioComponent implements OnInit {
       alert('Formulário inválido');
       return;
     }
-    console.log(this.form.value);
+    this.formularioSubmetido.emit(this.form.value);
     this.dialogRef.close(this.form.value);
   }
 

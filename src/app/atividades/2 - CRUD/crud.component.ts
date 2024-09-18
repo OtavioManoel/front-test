@@ -10,20 +10,19 @@ import { FormControl } from '@angular/forms';
   styleUrls: ['./crud.component.scss']
 })
 export class CrudComponent implements OnInit {
-
+  
   constructor(private dialog: MatDialog) { }
-
+  
   filtro = new FormControl()
 
   displayedColumns: string[] = ['actions', 'nome', 'email', 'senha', 'cep', 'logradouro'];
-
-  dataSource = [
-    { nome: "Teste1", email: "teste@email1.com", senha: "1234", cep: "80250104", logradouro: "Rua teste" }
+  dataSource: Pessoa[] = [
+    new Pessoa("Teste1", "teste@email1.com", "1234", "80250104", "Rua teste")
   ]
 
   ngOnInit(): void {
     this.filtro.valueChanges.subscribe(valor => {
-      this.filtrar("")
+      this.filtrar(valor)
     })
   }
 
@@ -32,7 +31,19 @@ export class CrudComponent implements OnInit {
   }
 
   adicionar() {
-    this.dialog.open(FormularioComponent)
+    const dialogRef = this.dialog.open(FormularioComponent)
+
+    dialogRef.componentInstance.formularioSubmetido.subscribe(dados => {
+      const novaPessoa = new Pessoa(
+        dados.nome,
+        dados.email,
+        dados.senha,
+        dados.cep,
+        dados.logradouro
+      )
+      this.dataSource.push(novaPessoa)
+      this.dataSource = [...this.dataSource]
+    });
   }
 
   editar(pessoa: Pessoa) {
@@ -40,12 +51,21 @@ export class CrudComponent implements OnInit {
   }
 
   remover(pessoa: Pessoa) {
-    if (!confirm("Deseja remover a pessoa ${pessoa.nome}")) return
-
+    if (!confirm(`Deseja remover a pessoa ${pessoa.nome}?`)) return
+    
+    this.dataSource = this.dataSource.filter(p => p !== pessoa)
     alert("removido com sucesso!")
   }
 }
 
+
 class Pessoa {
-  constructor(nome: string,) { }
+  constructor(
+    public nome: string,
+    public email: string,
+    public senha: string,
+    public cep: string,
+    public logradouro: string
+  ) {}
 }
+
