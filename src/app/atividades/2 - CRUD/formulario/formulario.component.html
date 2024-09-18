@@ -1,24 +1,38 @@
-<form style="display: flex;flex-direction: column;gap: 20px;">
+<form [formGroup]="form" (ngSubmit)="onSubmit()" style="display: flex;flex-direction: column;gap: 20px;">
     <mat-form-field appearance="fill">
-        <mat-label>Nome</mat-label>
-        <input type="text" matInput placeholder="Digite algo">
+      <mat-label>Nome</mat-label>
+      <input formControlName="nome" matInput placeholder="Digite algo">
+      <mat-error *ngIf="form.get('nome')?.hasError('required')">Nome é obrigatório</mat-error>
+      <mat-error *ngIf="form.get('nome')?.hasError('minlength')">Nome deve ter no mínimo 3 caracteres</mat-error>
+      <mat-error *ngIf="form.get('nome')?.hasError('maxlength')">Nome deve ter no máximo 30 caracteres</mat-error>
     </mat-form-field>
+
     <mat-form-field appearance="fill">
         <mat-label>Email</mat-label>
-        <input type="text" matInput placeholder="Digite algo">
+        <input formControlName="email" matInput placeholder="Digite algo">
+        <mat-error *ngIf="form.get('email')?.hasError('required')">Email é obrigatório</mat-error>
+        <mat-error *ngIf="form.get('email')?.hasError('email')">Email inválido</mat-error>
     </mat-form-field>
+
     <mat-form-field appearance="fill">
         <mat-label>Senha</mat-label>
-        <input type="text" matInput placeholder="Digite algo">
+        <input formControlName="senha" matInput placeholder="Digite algo">
+        <mat-error *ngIf="form.get('senha')?.hasError('required')">Senha é obrigatório</mat-error>
     </mat-form-field>
+
     <mat-form-field appearance="fill">
         <mat-label>CEP</mat-label>
-        <input type="text" matInput placeholder="Digite algo">
+        <input formControlName="cep" matInput placeholder="Digite algo" (input)="onCepInput()">
+        <mat-error *ngIf="form.get('cep')?.hasError('required')">CEP é obrigatório</mat-error>
+        <mat-error *ngIf="form.get('cep')?.hasError('invalidCep')">CEP inválido</mat-error>
     </mat-form-field>
+
     <mat-form-field appearance="fill">
         <mat-label>Logradouro</mat-label>
-        <input type="text" matInput placeholder="Digite algo">
+        <input formControlName="logradouro" matInput placeholder="Logradouro" [attr.disabled]="true">
+        <mat-error *ngIf="form.get('logradouro')?.hasError('required')">Logradouro é obrigatório</mat-error>
     </mat-form-field>
-    <button mat-raised-button>Salvar</button>
-    <button mat-raised-button matDialogClose>Cancelar</button>
+
+    <button mat-raised-button type="submit">Salvar</button>
+    <button mat-raised-button (click)="cancelar()">Cancelar</button>
 </form>
